@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>fetch api</title>
+</head>
+<style>
+    
+    h1{
+        margin: 0;
+        padding: 0;
+       color: white;
+        align-items: center;
+        align-content: center;
+        text-align: center;
+        font-family: monospace;
+
+    }
+    body {
+        margin: 0px;
+        padding: 0px;
+        font-family: monospace;
+    }
+
+    .customers {
+        font-family: Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+
+    }
+
+    .customers td,
+    .customers th {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+
+    .customers tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    .customers tr:hover {
+        background-color: #ddd;
+    }
+
+    .customers th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: royalblue;
+        color: white;
+    }
+
+    #home {
+        height: 100vh;
+        width: 100%;
+        background-color: #000c66;
+    }
+
+    .container {
+        height: 200px;
+        position: relative;
+
+    }
+
+    .center {
+        margin: 0;
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        -ms-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+    }
+
+    .button {
+        background-color: royalblue;
+        /* Green */
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+    }
+
+    #table1,
+    #table2 {
+        display: none;
+
+    }
+
+    .button {
+        cursor: pointer;
+    }
+</style>
+
+<body>
+    <div id="home">
+        <div class="container">
+            <h1>COVID-19 DETAILS</h1>
+            <div class="center">
+                <button class="button" onclick="getData()">All Data</button>
+                
+                <select class="button" id="selTag" onclick="data()"></select>
+            </div>
+        </div>
+
+    </div>
+    <div id="table1">
+        <table class="customers" id="allTable">
+            <thead>
+                <th>Country</th>
+                <th>CountryCode</th>
+                <th>NewConfirmed</th>
+                <th>NewDeaths</th>
+                <th>TotalDeaths</th>
+            </thead>
+            <tbody id="abdy">
+
+            </tbody>
+        </table>
+    </div>
+    <div id="table2">
+        <table class="customers" id="selTable">
+            <thead>
+                <th>Country</th>
+                <th>CountryCode</th>
+                <th>NewConfirmed</th>
+                <th>NewDeaths</th>
+                <th>TotalDeaths</th>
+            </thead>
+            <tbody id="sbdy">
+
+            </tbody>
+        </table>
+    </div>
+
+</body>
+<script>
+
+data()
+    async function getData() {
+        const data = await fetch("https://api.covid19api.com/summary")
+        const actual = await data.json()
+
+        for (i = 0; i < actual.Countries.length; i++) {
+            country = actual.Countries[i].Country
+            countryCode = actual.Countries[i].CountryCode
+            newConfirmed = actual.Countries[i].NewConfirmed
+            newDeaths = actual.Countries[i].NewDeaths
+            totalDeaths = actual.Countries[i].TotalDeaths
+
+
+            row = document.createElement("tr")
+            cell0 = document.createElement("td")
+            cell1 = document.createElement("td")
+            cell2 = document.createElement("td")
+            cell3 = document.createElement("td")
+            cell4 = document.createElement("td")
+
+            cell0.innerHTML = country
+            cell1.innerHTML = countryCode
+            cell2.innerHTML = newConfirmed
+            cell3.innerHTML = newDeaths
+            cell4.innerHTML = totalDeaths
+
+            document.getElementById("abdy").appendChild(row)
+            row.appendChild(cell0)
+            row.appendChild(cell1)
+            row.appendChild(cell2)
+            row.appendChild(cell3)
+            row.appendChild(cell4)
+        }
+        document.getElementById("table1").style.display = "block"
+        document.getElementById("table2").style.display = "none"
+    }
+
+    async function data() {
+        document.getElementById("sbdy").innerHTML=""
+        const data = await fetch("https://api.covid19api.com/summary")
+        const actual = await data.json()
+
+        for (i = 0; i < actual.Countries.length; i++) {
+            country = actual.Countries[i].Country
+            option = document.createElement("option")
+            option.innerHTML = country
+            document.getElementById("selTag").appendChild(option)
+        }
+        selected = document.getElementById("selTag").selectedIndex;
+        options = document.getElementById("selTag").options;
+        i = options[selected].index
+
+        country = actual.Countries[i].Country
+        countryCode = actual.Countries[i].CountryCode
+        newConfirmed = actual.Countries[i].NewConfirmed
+        newDeaths = actual.Countries[i].NewDeaths
+        totalDeaths = actual.Countries[i].TotalDeaths
+
+        row = document.createElement("tr")
+        cell0 = document.createElement("td")
+        cell1 = document.createElement("td")
+        cell2 = document.createElement("td")
+        cell3 = document.createElement("td")
+        cell4 = document.createElement("td")    
+
+        cell0.innerHTML = country
+        cell1.innerHTML = countryCode
+        cell2.innerHTML = newConfirmed
+        cell3.innerHTML = newDeaths
+        cell4.innerHTML = totalDeaths
+
+        document.getElementById("sbdy").appendChild(row)
+        row.appendChild(cell0)
+        row.appendChild(cell1)
+        row.appendChild(cell2)
+        row.appendChild(cell3)
+        row.appendChild(cell4)
+        document.getElementById("table1").style.display = "none"
+        document.getElementById("table2").style.display = "block"
+    }
+</script>
+
+</html>
